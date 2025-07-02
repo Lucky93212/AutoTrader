@@ -27,12 +27,7 @@ The first level employs heterogeneous base models to capture different aspects o
 - **Regularization**: L1 penalty (λ = 1×10⁻⁵) + gradient clipping + early stopping
 - **Optimization**: AdamW with cosine annealing warm restarts
 
-The loss function combines MSE with L1 regularization:
-```
-L = MSE(y, ŷ) + λ||θ||₁
-```
-
-Where θ represents the model parameters and λ controls sparsity.
+The loss function combines MSE with L1 regularization: $L = \text{MSE}(y, \hat{y}) + \lambda \lVert \theta \rVert_1$. Where θ represents the model parameters and λ controls sparsity.
 
 **Gradient Boosting Models (XGBoost & LightGBM)**
 - **XGBoost**: GPU-accelerated tree boosting with sophisticated regularization
@@ -40,13 +35,7 @@ Where θ represents the model parameters and λ controls sparsity.
 - **Hyperparameters**: Conservative learning rates (0.01) with high iteration counts for stability
 
 **Boosted Residual Models**
-Here I trained traditional ML models (SVR, Random Forest, Lasso) as base predictors, then use XGBoost to learn the residual patterns:
-
-```
-ŷ_final = f_base(X) + f_boost(X, residuals)
-```
-
-This captures both linear and non-linear components of the prediction problem.
+Here I trained traditional ML models (SVR, Random Forest, Lasso) as base predictors, then use XGBoost to learn the residual patterns: $\hat{y}{\text{final}} = f_{\text{base}}(X) + f_{\text{boost}}(X, \text{residuals})$. This captures both linear and non-linear components of the prediction problem.
 
 **AutoML (AutoGluon)**
 - Automated hyperparameter optimization across multiple model families
@@ -72,13 +61,7 @@ The second level trains meta-models on the predictions from Level 1:
 - Dropout and early stopping for regularization
 
 #### Level 3: Final Ensemble
-The third level employs Ridge regression to learn optimal linear weights:
-
-```
-ŷ_final = Σᵢ wᵢ * ŷᵢ⁽²⁾ + ε
-```
-
-Where ŷᵢ⁽²⁾ are Level 2 predictions and wᵢ are learned weights with L2 regularization.
+The third level employs Ridge regression to learn optimal linear weights: $\hat{y}{\text{final}} = \sum_{i} w_i \cdot \hat{y}_i^{(2)} + \varepsilon$. Where ŷᵢ⁽²⁾ are Level 2 predictions and wᵢ are learned weights with L2 regularization.
 
 ### Financial Theory Foundation
 
@@ -112,25 +95,15 @@ While respecting EMH principles, the system exploits several well-documented mar
 The risk management framework extends traditional MPT:
 
 **Value at Risk (VaR) Calculation**
-Using Monte Carlo simulation with Geometric Brownian Motion:
+Using Monte Carlo simulation with Geometric Brownian Motion: $dS_t = \mu S_t \, dt + \sigma S_t \, dW_t$, where:
 
-```
-dS_t = μS_t dt + σS_t dW_t
-```
-
-Where:
 - μ = drift parameter (estimated from historical returns)
 - σ = volatility parameter (estimated from historical volatility)
 - dW_t = Wiener process (random walk component)
 
 **Risk-Adjusted Position Sizing**
-Position weights are calculated using a confidence-weighted approach:
+Position weights are calculated using a confidence-weighted approach: $w_i = \frac{ \left| r_i \right| \cdot c_i^\alpha }{ \sum_j \left| r_j \right| \cdot c_j^\alpha } \cdot A$, where:
 
-```
-w_i = (|r_i| × c_i^α) / Σⱼ(|r_j| × c_j^α) × A
-```
-
-Where:
 - r_i = predicted return for asset i
 - c_i = prediction confidence for asset i
 - α = confidence exponent (1.5 for non-linear emphasis)
@@ -142,9 +115,8 @@ Where:
 The system employs sophisticated Monte Carlo methods for portfolio risk assessment:
 
 **Geometric Brownian Motion Implementation**
-```python
-S(t) = S₀ × exp((μ - σ²/2)t + σ√t × Z)
-```
+
+$S(t) = S_0 \cdot \exp\left( \left( \mu - \frac{\sigma^2}{2} \right) t + \sigma \sqrt{t} \cdot Z \right)$
 
 Where Z ~ N(0,1) represents random market shocks.
 
